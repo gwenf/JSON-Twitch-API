@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Twitch App</title>
+	<link rel='stylesheet' href="bootstrapForAPI/css/bootstrap.css">
+	<link rel='stylesheet' href="main.css">
+	<script src="jquery-1.11.3.min.js"></script>
+	<script>
+	
+$(document).ready(function(){
+		
+	var users = ["freecodecamp", "storbeck", "terakilobyte", "habathcx","RobotCaleb","comster404","brunofin","thomasballinger","noobs2ninjas","beohoff"];
+
+		
+	users.forEach(function (user) {
+	
+			$.getJSON('https://api.twitch.tv/kraken/streams/?callback=?' + user, function(userStream) {
+				$.getJSON('https://api.twitch.tv/kraken/channels/?callback=?' + user, function(channel) {
+					document.write(channel);
+					alert('hello');
+				});
+			});
+	});
+});
+	function online() {
+  for(var i in streams) {
+    channel = channels[i];
+    var game = games[i];
+    
+    if((streams[i].responseJSON.stream !== null) && (~channel.search(searchText) || ~game.search(searchText))) {
+      $("#tr" + channel).show();
+    } else {
+      $("#tr" + channel).hide();
+    }
+  }
+  $("#all").css("background-color", "#4C6081");
+  $("#online").css("background-color", "#9C6081");
+  $("#offline").css("background-color", "#4C6081");
+  showing="online";
+}  
+
+function offline() {
+  for(var i in streams) {
+    channel = channels[i];
+    var game = games[i];
+    
+    if((streams[i].responseJSON.stream === null) && (~channel.search(searchText) || ~game.search(searchText))) {
+      $("#tr" + channel).show();
+    } else {
+      $("#tr" + channel).hide();
+    }
+  }
+  $("#all").css("background-color", "#4C6081");
+  $("#online").css("background-color", "#4C6081");
+  $("#offline").css("background-color", "#9C6081");
+  showing="offline";
+}
+
+document.getElementById("all").addEventListener("click", all);
+  
+document.getElementById("online").addEventListener("click", online);
+
+document.getElementById("offline").addEventListener("click", offline);
+
+var input = document.getElementById("search");
+input.addEventListener("input", function() {
+  searchText = input.value.toLowerCase();
+  if(showing === "all") all();
+  else if(showing === "online") online();
+  else if(showing === "offline") offline();
+});
+	</script>
+</head>
+<body>
+<!--
+	<nav>
+		<ul class='nav-links'>
+			<li id='all' class='link green'>All</li>
+			<li id='online' class='link'>Online</li>
+			<li id='offline' class='link'>Offline</li>
+			<li><input id='search' type='search' placeholder='Search'></li>
+		</ul>
+	</nav>
+-->
+	
+	
+	<div id='users'></div>
+	
+</body>
+</html>
